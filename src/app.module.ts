@@ -3,7 +3,9 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformResponseInterceptor } from './core/http/transform-response-interceptor';
 import { Database } from './database/dataBase';
 import { MotoristaModule } from './motoristas/motorista.module';
+import { AgeValidator } from './utils/ageValidator';
 import { CpfValidador } from './utils/cpf-validador';
+import { AgeValidateConstraint } from './utils/isAgeCheck';
 import { CpfValidadorConstraint } from './utils/isCpfCheck';
 
 @Module({
@@ -21,6 +23,8 @@ import { CpfValidadorConstraint } from './utils/isCpfCheck';
     },
     CpfValidador,
     CpfValidadorConstraint,
+    AgeValidator,
+    AgeValidateConstraint,
   ],
 })
 export class AppModule {}
