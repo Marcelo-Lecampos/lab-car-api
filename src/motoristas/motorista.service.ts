@@ -11,10 +11,11 @@ import { Motorista } from './motorista.entity';
 export class MotoristaService {
   constructor(private database: Database) {}
 
-  public async createMotorista(beer: Motorista): Promise<Motorista> {
+  public async createMotorista(motorista: Motorista): Promise<Motorista> {
     const allMotoristas = await this.database.getMotoristas();
+
     const CPFexist = allMotoristas.find(
-      (findMotorista) => findMotorista.cpf === beer.cpf,
+      (findMotorista) => findMotorista.cpf === motorista.cpf,
     );
     if (CPFexist) {
       throw new ConflictException({
@@ -22,8 +23,9 @@ export class MotoristaService {
         message: 'Já existe este CPF cadastrado',
       });
     }
-    await this.database.writeMotorista(beer);
-    return beer;
+    motorista.bloqueado = false;
+    await this.database.writeMotorista(motorista);
+    return motorista;
   }
 
   public async findMotoristas(page, size, name) {
