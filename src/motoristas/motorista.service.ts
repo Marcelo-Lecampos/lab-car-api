@@ -42,15 +42,47 @@ export class MotoristaService {
     return motoristas.slice((startPage - 1) * size, startPage * size);
   }
 
-  public async searchByCpf(cpf: string): Promise<Motorista> {
+  public async searchCpf(cpf: string): Promise<Motorista> {
     const motoristas = await this.database.getMotoristas();
     const motorista = motoristas.find((motorista) => motorista.cpf === cpf);
     if (motorista) {
       return motorista;
     } else {
       throw new NotFoundException({
-        statusCode: HttpStatus.NOT_FOUND,
         message: 'Driver not found',
+        statusCode: HttpStatus.NOT_FOUND,
+      });
+    }
+  }
+  public async updateMotorista(cpf: string, motorista: Motorista) {
+    const motoristas = await this.database.getMotoristas();
+    const motoristaCPF = motoristas.find((motorista) => motorista.cpf === cpf);
+    if (motoristaCPF) {
+      const motoristaIndex = motoristas.indexOf(motoristaCPF);
+      motoristas[motoristaIndex] = motorista;
+      motorista.bloqueado = false;
+      await this.database.writeMotoristas(motoristas);
+      return motorista;
+    } else {
+      throw new NotFoundException({
+        message: 'Driver not found',
+        statusCode: HttpStatus.NOT_FOUND,
+      });
+    }
+  }
+  public async bloquearMotorista(cpf: string) {
+    const motoristas = await this.database.getMotoristas();
+    const motoristaCPF = motoristas.find((motorista) => motorista.cpf === cpf);
+    if (motoristaCPF) {
+      const motoristaIndex = motoristas.indexOf(motoristaCPF);
+      motoristas[motoristaIndex].bloqueado =
+        !motoristas[motoristaIndex].bloqueado;
+      await this.database.writeMotoristas(motoristas);
+      return motoristaCPF;
+    } else {
+      throw new NotFoundException({
+        message: 'Driver not found',
+        statusCode: HttpStatus.NOT_FOUND,
       });
     }
   }
