@@ -1,18 +1,12 @@
 import {
   Contains,
-  isBoolean,
-  IsBoolean,
-  IsDate,
   IsNotEmpty,
   IsString,
   MaxLength,
   MinLength,
   NotContains,
 } from 'class-validator';
-import { isAgeCheck } from 'src/utils/isAgeCheck';
-import { isCpfCheck } from 'src/utils/isCpfCheck';
-
-// ToDO: Falta testar e implementar os Decorators;
+import { isAgeCheck } from 'src/commons/decorators/isAgeCheck';
 
 export class Motorista {
   @IsNotEmpty()

@@ -1,10 +1,5 @@
-import {
-  ConflictException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { Database } from 'src/database/database';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { Database } from 'src/database/motoristaDB/dataBase';
 import { Motorista } from './motorista.entity';
 
 @Injectable()
@@ -18,10 +13,7 @@ export class MotoristaService {
       (findMotorista) => findMotorista.cpf === motorista.cpf,
     );
     if (CPFexist) {
-      throw new ConflictException({
-        statusCode: 409,
-        message: 'Já existe este CPF cadastrado',
-      });
+      return null;
     }
     motorista.bloqueado = false;
     await this.database.writeMotorista(motorista);
@@ -48,26 +40,28 @@ export class MotoristaService {
     if (motorista) {
       return motorista;
     } else {
-      throw new NotFoundException({
-        message: 'Driver not found',
-        statusCode: HttpStatus.NOT_FOUND,
-      });
+      null;
     }
   }
   public async updateMotorista(cpf: string, motorista: Motorista) {
     const motoristas = await this.database.getMotoristas();
-    const motoristaCPF = motoristas.find((motorista) => motorista.cpf === cpf);
-    if (motoristaCPF) {
+    const motoristaCPF = motoristas.find(
+      (motoristaFind) => motoristaFind.cpf === cpf,
+    );
+    const cpfPass = motorista.cpf === cpf;
+    const cpfExist = motoristas.find(
+      (motoristaFind) => motoristaFind.cpf === motorista.cpf,
+    );
+    if (!!motoristaCPF && (!!cpfPass || !cpfExist)) {
       const motoristaIndex = motoristas.indexOf(motoristaCPF);
       motoristas[motoristaIndex] = motorista;
-      motorista.bloqueado = false;
+      motorista.bloqueado = motoristaCPF.bloqueado;
       await this.database.writeMotoristas(motoristas);
       return motorista;
+    } else if (motoristaCPF) {
+      return null;
     } else {
-      throw new NotFoundException({
-        message: 'Driver not found',
-        statusCode: HttpStatus.NOT_FOUND,
-      });
+      return null;
     }
   }
   public async bloquearMotorista(cpf: string) {

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CpfValidador } from './cpf-validador';
 import {
   ValidationArguments,
   registerDecorator,
@@ -7,28 +6,29 @@ import {
   ValidatorConstraintInterface,
   ValidatorConstraint,
 } from 'class-validator';
+import { AgeValidator } from '../../utils/ageValidator';
 
 @Injectable()
 @ValidatorConstraint()
-export class CpfValidadorConstraint implements ValidatorConstraintInterface {
-  constructor(private cpfValidador: CpfValidador) {}
+export class AgeValidateConstraint implements ValidatorConstraintInterface {
+  constructor(private ageValidador: AgeValidator) {}
   validate(
     value: any,
     validationArguments?: ValidationArguments,
   ): boolean | Promise<boolean> {
-    return this.cpfValidador.cpf(value);
+    return this.ageValidador.date(value);
   }
   defaultMessage?(validationArguments?: ValidationArguments): string {
-    return 'CPF não é valido';
+    return 'Idade mínima de 18 anos é necessária';
   }
 }
-export function isCpfCheck(validationOptions?: ValidationOptions) {
+export function isAgeCheck(validationOptions?: ValidationOptions) {
   return function (object: any, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
-      validator: CpfValidadorConstraint,
+      validator: AgeValidateConstraint,
     });
   };
 }

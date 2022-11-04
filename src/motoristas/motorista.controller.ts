@@ -9,6 +9,8 @@ import {
   Param,
   Put,
   Patch,
+  ConflictException,
+  NotFoundException,
 } from '@nestjs/common';
 import { NestResponseBuilder } from 'src/core/http/nest-response-builder';
 import { Motorista } from './motorista.entity';
@@ -32,11 +34,17 @@ export class MotoristaController {
     @Body() motorista: Motorista,
   ): Promise<NestResponse> {
     const motoristaCriado = await this.service.createMotorista(motorista);
-    return new NestResponseBuilder()
-      .withStatus(HttpStatus.CREATED)
-      .withHeaders({ Location: `motoristas/${motoristaCriado.nome}` })
-      .withBody(motoristaCriado)
-      .build();
+    if (motoristaCriado) {
+      return new NestResponseBuilder()
+        .withStatus(HttpStatus.CREATED)
+        .withHeaders({ Location: `motoristas/${motoristaCriado.nome}` })
+        .withBody(motoristaCriado)
+        .build();
+    }
+    throw new ConflictException({
+      statusCode: 409,
+      message: 'Já existe este CPF cadastrado',
+    });
   }
 
   @Get(':cpf')
@@ -44,11 +52,18 @@ export class MotoristaController {
     @Param('cpf') cpf: string,
   ): Promise<NestResponse> {
     const motorista = await this.service.searchCpf(cpf);
-    return new NestResponseBuilder()
-      .withStatus(HttpStatus.OK)
-      .withHeaders({ Location: `motoristas/${motorista.cpf}` })
-      .withBody(motorista)
-      .build();
+    if (motorista) {
+      return new NestResponseBuilder()
+        .withStatus(HttpStatus.OK)
+        .withHeaders({ Location: `motoristas/${motorista.cpf}` })
+        .withBody(motorista)
+        .build();
+    } else {
+      throw new ConflictException({
+        statusCode: 409,
+        message: 'Motorista não encontrado',
+      });
+    }
   }
   @Put(':cpf')
   public async updateMotorista(
@@ -59,22 +74,35 @@ export class MotoristaController {
       cpf,
       motorista,
     );
-    return new NestResponseBuilder()
-      .withStatus(HttpStatus.OK)
-      .withHeaders({ Location: `motoristas/${motoristaAtualizado.cpf}` })
-      .withBody(motoristaAtualizado)
-      .build();
+    if (motoristaAtualizado) {
+      return new NestResponseBuilder()
+        .withStatus(HttpStatus.OK)
+        .withHeaders({ Location: `motoristas/${motoristaAtualizado.cpf}` })
+        .withBody(motoristaAtualizado)
+        .build();
+    }
+    throw new NotFoundException({
+      statusCode: HttpStatus.NOT_FOUND,
+      message: 'CPF invalido',
+    });
   }
-  // criar um pat que muda o bloqueado para true
+
   @Patch(':cpf/bloquear')
   public async bloquearMotorista(
     @Param('cpf') cpf: string,
   ): Promise<NestResponse> {
     const motoristaBloqueado = await this.service.bloquearMotorista(cpf);
-    return new NestResponseBuilder()
-      .withStatus(HttpStatus.OK)
-      .withHeaders({ Location: `motoristas/${motoristaBloqueado.cpf}` })
-      .withBody(motoristaBloqueado)
-      .build();
+    if (motoristaBloqueado) {
+      return new NestResponseBuilder()
+        .withStatus(HttpStatus.OK)
+        .withHeaders({ Location: `motoristas/${motoristaBloqueado.cpf}` })
+        .withBody(motoristaBloqueado)
+        .build();
+    } else {
+      throw new ConflictException({
+        statusCode: 409,
+        message: 'Motorista não encontrado',
+      });
+    }
   }
 }

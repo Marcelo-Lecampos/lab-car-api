@@ -4,12 +4,12 @@ import { Motorista } from 'src/motoristas/motorista.entity';
 
 @Injectable()
 export class Database {
-  private FILENAME = 'src/database/motoristas.json';
+  private FILENAME = 'src/database/motoristaDB/motoristas.json';
 
   public async getMotoristas(): Promise<Motorista[]> {
     const motoristasInFile = await readFile(this.FILENAME, 'utf-8');
-    const beers = JSON.parse(motoristasInFile);
-    return beers;
+    const motorista = JSON.parse(motoristasInFile);
+    return motorista;
   }
 
   public async writeMotorista(motorista: Motorista) {

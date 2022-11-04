@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { Database } from 'src/database/database';
+import { Database } from 'src/database/motoristaDB/dataBase';
 import { MotoristaController } from './motorista.controller';
 import { MotoristaService } from './motorista.service';
 
