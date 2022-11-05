@@ -1,17 +1,11 @@
-import {
-  ConflictException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { Database } from 'src/database/passageiroDB/dataBase';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { PassageiroDB } from 'src/database/passageiroDB/passageiroDB';
 import { Passageiro } from './passageiro.entity';
-// import { Database } from 'src/database/motoristaDB/dataBase';
-// import { Passageiro } from './passageiro.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class PassageiroService {
-  constructor(private database: Database) {}
+  constructor(private database: PassageiroDB) {}
 
   public async createPassageiro(passageiro: Passageiro): Promise<Passageiro> {
     const allPassageiros = await this.database.getPassageiros();
@@ -20,12 +14,9 @@ export class PassageiroService {
       (findPassageiro) => findPassageiro.cpf === passageiro.cpf,
     );
     if (CPFexist) {
-      throw new ConflictException({
-        statusCode: 409,
-        message: 'Já existe este CPF cadastrado',
-      });
+      return null;
     }
-    passageiro.bloqueado = false;
+    passageiro.id = uuidv4();
     await this.database.writePassageiro(passageiro);
     return passageiro;
   }
@@ -33,13 +24,13 @@ export class PassageiroService {
   public async findPassageiros(page, size, name) {
     const startPage = page < 1 ? 1 : page;
     const passageiros = await this.database.getPassageiros();
-    const passageiroName = name ? name : '';
+    const PassageiroName = name ? name : '';
 
-    if (passageiroName) {
-      const passageirosSearch = passageiros.filter((passageiro) =>
-        passageiro.nome.toUpperCase().includes(passageiroName.toUpperCase()),
+    if (PassageiroName) {
+      const PassageirosSearch = passageiros.filter((passageiro) =>
+        passageiro.nome.toUpperCase().includes(PassageiroName.toUpperCase()),
       );
-      return passageirosSearch;
+      return PassageirosSearch;
     }
     return passageiros.slice((startPage - 1) * size, startPage * size);
   }
@@ -50,46 +41,30 @@ export class PassageiroService {
     if (passageiro) {
       return passageiro;
     } else {
-      throw new NotFoundException({
-        message: 'Driver not found',
-        statusCode: HttpStatus.NOT_FOUND,
-      });
+      null;
     }
   }
-  public async updatePassageiro(cpf: string, passageiro: Passageiro) {
+  public async updatePassageiro(
+    cpf: string,
+    passageiro: Passageiro,
+  ): Promise<Passageiro> | null {
     const passageiros = await this.database.getPassageiros();
     const passageiroCPF = passageiros.find(
-      (passageiro) => passageiro.cpf === cpf,
+      (passageiroFind) => passageiroFind.cpf === cpf,
     );
-    if (passageiroCPF) {
+    const cpfPass = passageiro.cpf === cpf;
+    const cpfExist = passageiros.find(
+      (passageiroFind) => passageiroFind.cpf === passageiro.cpf,
+    );
+    if (!!passageiroCPF && (!!cpfPass || !cpfExist)) {
       const passageiroIndex = passageiros.indexOf(passageiroCPF);
       passageiros[passageiroIndex] = passageiro;
-      passageiro.bloqueado = false;
       await this.database.writePassageiros(passageiros);
       return passageiro;
+    } else if (passageiroCPF) {
+      return null;
     } else {
-      throw new NotFoundException({
-        message: 'Driver not found',
-        statusCode: HttpStatus.NOT_FOUND,
-      });
-    }
-  }
-  public async bloquearMotorista(cpf: string) {
-    const passageiros = await this.database.getPassageiros();
-    const passageiroCPF = passageiros.find(
-      (passageiro) => passageiro.cpf === cpf,
-    );
-    if (passageiroCPF) {
-      const passageiroIndex = passageiros.indexOf(passageiroCPF);
-      passageiros[passageiroIndex].bloqueado =
-        !passageiros[passageiroIndex].bloqueado;
-      await this.database.writePassageiros(passageiros);
-      return passageiroCPF;
-    } else {
-      throw new NotFoundException({
-        message: 'Driver not found',
-        statusCode: HttpStatus.NOT_FOUND,
-      });
+      return null;
     }
   }
 }

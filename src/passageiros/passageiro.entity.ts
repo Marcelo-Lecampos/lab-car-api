@@ -9,6 +9,8 @@ import {
 import { isAgeCheck } from 'src/commons/decorators/isAgeCheck';
 
 export class Passageiro {
+  id: string;
+
   @IsNotEmpty()
   @MaxLength(50)
   nome: string;
@@ -25,11 +27,14 @@ export class Passageiro {
   @IsString()
   // @isCpfCheck()
   cpf: string;
-  @IsNotEmpty()
-  @IsString()
-  placa: string;
-  @IsNotEmpty()
-  modelo: string;
 
-  bloqueado: boolean;
+  //criar rua com um objeto de strings
+  endereço: {
+    rua: string;
+    numero: number;
+    bairro: string;
+    cidade: string;
+    estado: string;
+    cep: string;
+  };
 }

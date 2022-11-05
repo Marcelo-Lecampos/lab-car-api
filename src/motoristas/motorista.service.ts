@@ -1,10 +1,10 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { Database } from 'src/database/motoristaDB/dataBase';
+import { MotoristaDB } from 'src/database/motoristaDB/motoristaDB';
 import { Motorista } from './motorista.entity';
 
 @Injectable()
 export class MotoristaService {
-  constructor(private database: Database) {}
+  constructor(private database: MotoristaDB) {}
 
   public async createMotorista(motorista: Motorista): Promise<Motorista> {
     const allMotoristas = await this.database.getMotoristas();
