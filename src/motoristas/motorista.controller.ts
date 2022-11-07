@@ -11,6 +11,7 @@ import {
   Patch,
   ConflictException,
   NotFoundException,
+  Delete,
 } from '@nestjs/common';
 import { NestResponseBuilder } from 'src/core/http/nest-response-builder';
 import { Motorista } from './motorista.entity';
@@ -87,7 +88,7 @@ export class MotoristaController {
     });
   }
 
-  @Patch(':cpf/bloquear')
+  @Patch('bloquear/:cpf')
   public async bloquearMotorista(
     @Param('cpf') cpf: string,
   ): Promise<NestResponse> {
@@ -102,6 +103,26 @@ export class MotoristaController {
       throw new ConflictException({
         statusCode: 409,
         message: 'Motorista não encontrado',
+      });
+    }
+  }
+  @Delete(':cpf')
+  public async deleteMotorista(
+    @Param('cpf') cpf: string,
+  ): Promise<NestResponse> {
+    const motoristaDeletado = await this.service.deleteMotorista(cpf);
+    if (motoristaDeletado) {
+      return new NestResponseBuilder()
+        .withStatus(HttpStatus.OK)
+        .withHeaders({
+          Location: `motoristas/${motoristaDeletado.motoristaDeletado.cpf}`,
+        })
+        .withBody(motoristaDeletado)
+        .build();
+    } else {
+      throw new ConflictException({
+        statusCode: 409,
+        message: 'Operação não permitida ou motorista não encontrado',
       });
     }
   }

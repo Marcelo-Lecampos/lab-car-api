@@ -4,7 +4,7 @@ import { Viagem } from 'src/viagens/viagens.entity';
 
 @Injectable()
 export class ViagemDB {
-  private FILENAME = 'src/database/passageiroDB/passageiros.json';
+  private FILENAME = 'src/database/viagemDB/viagens.json';
 
   public async getViagens(): Promise<Viagem[]> {
     const viagensInFile = await readFile(this.FILENAME, 'utf-8');

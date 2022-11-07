@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Contains,
   IsNotEmpty,
@@ -9,6 +10,8 @@ import {
 import { isAgeCheck } from 'src/commons/decorators/isAgeCheck';
 
 export class Motorista {
+  id: string;
+
   @IsNotEmpty()
   @MaxLength(50)
   nome: string;
@@ -32,4 +35,6 @@ export class Motorista {
   modelo: string;
 
   bloqueado: boolean;
+
+  viagens: any[];
 }

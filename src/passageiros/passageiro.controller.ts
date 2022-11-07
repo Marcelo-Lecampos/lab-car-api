@@ -8,9 +8,9 @@ import {
   Query,
   Param,
   Put,
-  Patch,
   ConflictException,
   NotFoundException,
+  Delete,
 } from '@nestjs/common';
 import { NestResponseBuilder } from 'src/core/http/nest-response-builder';
 import { Passageiro } from './passageiro.entity';
@@ -85,5 +85,25 @@ export class PassageiroController {
       statusCode: HttpStatus.NOT_FOUND,
       message: 'CPF invalido',
     });
+  }
+  @Delete(':cpf')
+  public async deletePassageiro(
+    @Param('cpf') cpf: string,
+  ): Promise<NestResponse> {
+    const passageiroDeletado = await this.service.deletePassageiro(cpf);
+    if (passageiroDeletado) {
+      return new NestResponseBuilder()
+        .withStatus(HttpStatus.OK)
+        .withHeaders({
+          Location: `passageiros/${passageiroDeletado.passageiroDeletado.cpf}`,
+        })
+        .withBody(passageiroDeletado)
+        .build();
+    } else {
+      throw new ConflictException({
+        statusCode: 409,
+        message: 'Operação não permitida ou motorista não encontrado',
+      });
+    }
   }
 }

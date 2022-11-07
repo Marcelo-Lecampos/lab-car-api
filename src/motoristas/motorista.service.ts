@@ -1,6 +1,7 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { MotoristaDB } from 'src/database/motoristaDB/motoristaDB';
 import { Motorista } from './motorista.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class MotoristaService {
@@ -16,6 +17,8 @@ export class MotoristaService {
       return null;
     }
     motorista.bloqueado = false;
+    motorista.id = uuidv4();
+    motorista.viagens = [];
     await this.database.writeMotorista(motorista);
     return motorista;
   }
@@ -79,5 +82,23 @@ export class MotoristaService {
         statusCode: HttpStatus.NOT_FOUND,
       });
     }
+  }
+  public async deleteMotorista(cpf: string) {
+    const motoristas = await this.database.getMotoristas();
+    const motoristaDeletado = motoristas.find(
+      (motorista) => motorista.cpf === cpf,
+    );
+    if (motoristaDeletado && motoristaDeletado.viagens.length === 0) {
+      const motoristaIndex = motoristas.indexOf(motoristaDeletado);
+      motoristas.splice(motoristaIndex, 1);
+      await this.database.writeMotoristas(motoristas);
+      const success = {
+        message: 'Motorista Deletado',
+        statusCode: HttpStatus.OK,
+        motoristaDeletado,
+      };
+      return success;
+    }
+    return null;
   }
 }

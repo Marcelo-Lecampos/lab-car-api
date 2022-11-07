@@ -17,6 +17,7 @@ export class PassageiroService {
       return null;
     }
     passageiro.id = uuidv4();
+    passageiro.viagens = [];
     await this.database.writePassageiro(passageiro);
     return passageiro;
   }
@@ -66,5 +67,23 @@ export class PassageiroService {
     } else {
       return null;
     }
+  }
+  public async deletePassageiro(cpf: string) {
+    const passageiros = await this.database.getPassageiros();
+    const passageiroDeletado = passageiros.find(
+      (passageiro) => passageiro.cpf === cpf,
+    );
+    if (passageiroDeletado && passageiroDeletado.viagens.length === 0) {
+      const motoristaIndex = passageiros.indexOf(passageiroDeletado);
+      passageiros.splice(motoristaIndex, 1);
+      await this.database.writePassageiros(passageiros);
+      const success = {
+        message: 'Passageiro Deletado',
+        statusCode: HttpStatus.OK,
+        passageiroDeletado,
+      };
+      return success;
+    }
+    return null;
   }
 }

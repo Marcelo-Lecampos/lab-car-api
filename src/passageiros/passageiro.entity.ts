@@ -37,4 +37,6 @@ export class Passageiro {
     estado: string;
     cep: string;
   };
+
+  viagens: any[];
 }

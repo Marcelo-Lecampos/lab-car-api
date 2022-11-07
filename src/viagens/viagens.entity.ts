@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { ViagemStatus } from './viagens.enum';
 
@@ -15,4 +16,7 @@ export class Viagem {
   destino: string;
 
   ViagemStatus: ViagemStatus;
+
+  @Exclude()
+  distancia: number;
 }

@@ -1,3 +1,5 @@
+import { Injectable } from '@nestjs/common';
+@Injectable()
 export class AgeValidator {
   public date(data: string) {
     const date = new Date();
