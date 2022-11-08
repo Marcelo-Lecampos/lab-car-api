@@ -13,7 +13,7 @@ export class ViagemService {
     private motoristaDB: MotoristaDB,
   ) {}
 
-  public async createViagem(viagem: Viagem): Promise<Viagem> {
+  public async createViagem(viagem: Viagem) {
     const viagemBody = viagem;
     const viagensDB = await this.viagemDB.getViagens();
     const viagensSameID = viagensDB.filter(
@@ -33,7 +33,12 @@ export class ViagemService {
       viagemBody.ViagemStatus = ViagemStatus.CREATED;
       viagemBody.distancia = Math.floor(Math.random() * 10) + 1;
       await this.viagemDB.writeViagem(viagemBody);
-      return viagemBody;
+      const success = {
+        status: HttpStatus.CREATED,
+        message: 'Viagem criada com sucesso',
+        viagemBody,
+      };
+      return success;
     } else {
       return null;
     }

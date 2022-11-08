@@ -8,6 +8,7 @@ import {
   NotContains,
 } from 'class-validator';
 import { isAgeCheck } from 'src/commons/decorators/isAgeCheck';
+import { isCpfCheck } from 'src/commons/decorators/isCpfCheck';
 
 export class Motorista {
   id: string;
@@ -26,7 +27,7 @@ export class Motorista {
 
   @IsNotEmpty()
   @IsString()
-  // @isCpfCheck()
+  @isCpfCheck()
   cpf: string;
   @IsNotEmpty()
   @IsString()

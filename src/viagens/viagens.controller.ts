@@ -49,7 +49,7 @@ export class ViagemController {
     if (ViagemCriado) {
       return new NestResponseBuilder()
         .withStatus(HttpStatus.CREATED)
-        .withHeaders({ Location: `viagens/${ViagemCriado.id}` })
+        .withHeaders({ Location: `viagens/${ViagemCriado.viagemBody}` })
         .withBody(ViagemCriado)
         .build();
     }

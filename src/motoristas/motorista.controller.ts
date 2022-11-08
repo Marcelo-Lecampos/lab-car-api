@@ -38,7 +38,9 @@ export class MotoristaController {
     if (motoristaCriado) {
       return new NestResponseBuilder()
         .withStatus(HttpStatus.CREATED)
-        .withHeaders({ Location: `motoristas/${motoristaCriado.nome}` })
+        .withHeaders({
+          Location: `motoristas/${motoristaCriado.motorista.nome}`,
+        })
         .withBody(motoristaCriado)
         .build();
     }
@@ -56,7 +58,7 @@ export class MotoristaController {
     if (motorista) {
       return new NestResponseBuilder()
         .withStatus(HttpStatus.OK)
-        .withHeaders({ Location: `motoristas/${motorista.cpf}` })
+        .withHeaders({ Location: `motoristas/${motorista}` })
         .withBody(motorista)
         .build();
     } else {
@@ -78,7 +80,9 @@ export class MotoristaController {
     if (motoristaAtualizado) {
       return new NestResponseBuilder()
         .withStatus(HttpStatus.OK)
-        .withHeaders({ Location: `motoristas/${motoristaAtualizado.cpf}` })
+        .withHeaders({
+          Location: `motoristas/${motoristaAtualizado.motorista}`,
+        })
         .withBody(motoristaAtualizado)
         .build();
     }
@@ -96,7 +100,7 @@ export class MotoristaController {
     if (motoristaBloqueado) {
       return new NestResponseBuilder()
         .withStatus(HttpStatus.OK)
-        .withHeaders({ Location: `motoristas/${motoristaBloqueado.cpf}` })
+        .withHeaders({ Location: `motoristas/${motoristaBloqueado.motorista}` })
         .withBody(motoristaBloqueado)
         .build();
     } else {

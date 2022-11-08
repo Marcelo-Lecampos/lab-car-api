@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class MotoristaService {
   constructor(private database: MotoristaDB) {}
 
-  public async createMotorista(motorista: Motorista): Promise<Motorista> {
+  public async createMotorista(motorista: Motorista) {
     const allMotoristas = await this.database.getMotoristas();
 
     const CPFexist = allMotoristas.find(
@@ -20,7 +20,12 @@ export class MotoristaService {
     motorista.id = uuidv4();
     motorista.viagens = [];
     await this.database.writeMotorista(motorista);
-    return motorista;
+    const success = {
+      message: 'Motorista Criado',
+      statusCode: HttpStatus.OK,
+      motorista,
+    };
+    return success;
   }
 
   public async findMotoristas(page, size, name) {
@@ -37,11 +42,16 @@ export class MotoristaService {
     return motoristas.slice((startPage - 1) * size, startPage * size);
   }
 
-  public async searchCpf(cpf: string): Promise<Motorista> {
+  public async searchCpf(cpf: string) {
     const motoristas = await this.database.getMotoristas();
     const motorista = motoristas.find((motorista) => motorista.cpf === cpf);
     if (motorista) {
-      return motorista;
+      const success = {
+        message: 'Motorista Encontrado',
+        statusCode: HttpStatus.OK,
+        motorista,
+      };
+      return success;
     } else {
       null;
     }
@@ -59,8 +69,15 @@ export class MotoristaService {
       const motoristaIndex = motoristas.indexOf(motoristaCPF);
       motoristas[motoristaIndex] = motorista;
       motorista.bloqueado = motoristaCPF.bloqueado;
+      motorista.viagens = motoristaCPF.viagens;
+      motorista.id = motoristaCPF.id;
       await this.database.writeMotoristas(motoristas);
-      return motorista;
+      const success = {
+        message: 'Motorista Atualizado',
+        statusCode: HttpStatus.OK,
+        motorista,
+      };
+      return success;
     } else if (motoristaCPF) {
       return null;
     } else {
@@ -75,7 +92,13 @@ export class MotoristaService {
       motoristas[motoristaIndex].bloqueado =
         !motoristas[motoristaIndex].bloqueado;
       await this.database.writeMotoristas(motoristas);
-      return motoristaCPF;
+      const motorista = motoristaCPF;
+      const success = {
+        message: 'Motorista Status alterado com sucesso',
+        statusCode: HttpStatus.OK,
+        motorista,
+      };
+      return success;
     } else {
       throw new NotFoundException({
         message: 'Driver not found',

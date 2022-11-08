@@ -27,13 +27,6 @@ export class TransformResponseInterceptor implements NestInterceptor {
           const contextHttp = context.switchToHttp();
           const response = contextHttp.getResponse();
           const { status, headers, body } = responseFromController;
-
-          // {
-          //   "X-Owned": "teste",
-          //   "X-Version": "teste2"
-          // }
-          // ["header1", "header2"]
-          //headers[X-Owned] = teste
           const headerNames = Object.getOwnPropertyNames(headers);
           headerNames.forEach((header) => {
             const value = headers[header];

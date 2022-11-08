@@ -7,6 +7,7 @@ import {
   NotContains,
 } from 'class-validator';
 import { isAgeCheck } from 'src/commons/decorators/isAgeCheck';
+import { isCpfCheck } from 'src/commons/decorators/isCpfCheck';
 
 export class Passageiro {
   id: string;
@@ -25,7 +26,7 @@ export class Passageiro {
 
   @IsNotEmpty()
   @IsString()
-  // @isCpfCheck()
+  @isCpfCheck()
   cpf: string;
 
   //criar rua com um objeto de strings

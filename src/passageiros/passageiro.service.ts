@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { PassageiroDB } from 'src/database/passageiroDB/passageiroDB';
 import { Passageiro } from './passageiro.entity';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class PassageiroService {
   constructor(private database: PassageiroDB) {}
 
-  public async createPassageiro(passageiro: Passageiro): Promise<Passageiro> {
+  public async createPassageiro(passageiro: Passageiro) {
     const allPassageiros = await this.database.getPassageiros();
 
     const CPFexist = allPassageiros.find(
@@ -19,7 +19,12 @@ export class PassageiroService {
     passageiro.id = uuidv4();
     passageiro.viagens = [];
     await this.database.writePassageiro(passageiro);
-    return passageiro;
+    const success = {
+      message: 'Passageiro Criado',
+      statusCode: HttpStatus.CREATED,
+      passageiro,
+    };
+    return success;
   }
 
   public async findPassageiros(page, size, name) {
@@ -36,11 +41,16 @@ export class PassageiroService {
     return passageiros.slice((startPage - 1) * size, startPage * size);
   }
 
-  public async searchCpf(cpf: string): Promise<Passageiro> {
+  public async searchCpf(cpf: string) {
     const passageiros = await this.database.getPassageiros();
     const passageiro = passageiros.find((passageiro) => passageiro.cpf === cpf);
     if (passageiro) {
-      return passageiro;
+      const success = {
+        message: 'Passageiro Encontrado',
+        statusCode: HttpStatus.OK,
+        passageiro,
+      };
+      return success;
     } else {
       null;
     }
@@ -59,6 +69,9 @@ export class PassageiroService {
     );
     if (!!passageiroCPF && (!!cpfPass || !cpfExist)) {
       const passageiroIndex = passageiros.indexOf(passageiroCPF);
+      const passageiroID = passageiroCPF.id;
+      passageiro.id = passageiroID;
+      passageiro.viagens = passageiroCPF.viagens;
       passageiros[passageiroIndex] = passageiro;
       await this.database.writePassageiros(passageiros);
       return passageiro;

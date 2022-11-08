@@ -37,7 +37,7 @@ export class PassageiroController {
     if (passageiroCriado) {
       return new NestResponseBuilder()
         .withStatus(HttpStatus.CREATED)
-        .withHeaders({ Location: `passageiros/${passageiroCriado.nome}` })
+        .withHeaders({ Location: `passageiros/${passageiroCriado.passageiro}` })
         .withBody(passageiroCriado)
         .build();
     }
@@ -55,7 +55,7 @@ export class PassageiroController {
     if (passageiro) {
       return new NestResponseBuilder()
         .withStatus(HttpStatus.OK)
-        .withHeaders({ Location: `passageiros/${passageiro.cpf}` })
+        .withHeaders({ Location: `passageiros/${passageiro}` })
         .withBody(passageiro)
         .build();
     } else {

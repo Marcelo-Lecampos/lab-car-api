@@ -1,1 +1,1 @@
-[]
+[{"nome":"Junior","dataNascimento":"2004/11/04","cpf":"07024289651","endereço":{"rua":"do bob esponja","numero":44,"bairro":"centro","cidade":"fundo do mar","estado":"oceano do meio","cep":"389954"},"id":"3c94a9c6-be32-4683-b43b-33fb91f78723","viagens":[{"id":"3c94a9c6-be32-4683-b43b-33fb91f78723","origem":"tester","destino":"narnia","ViagemStatus":1,"distancia":8}]}]
