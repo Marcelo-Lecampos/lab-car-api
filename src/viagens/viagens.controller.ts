@@ -14,12 +14,37 @@ import {
 import { NestResponseBuilder } from 'src/core/http/nest-response-builder';
 import { ViagemService } from './viagens.service';
 import { Viagem } from './viagens.entity';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger/dist';
 
 @Controller('viagens')
+@ApiTags('viagens')
 export class ViagemController {
   constructor(private service: ViagemService) {}
 
+  @ApiQuery({
+    name: 'motoristaID',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'motoristaID',
+    required: false,
+    type: Number,
+  })
   @Get()
+  @ApiOperation({
+    summary: 'Busca uma viagem',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Busca uma viagem',
+  })
   public async findViagens(
     @Query('motoristaID') motoristaID,
     @Query('distancia') distancia,
@@ -27,7 +52,19 @@ export class ViagemController {
     return await this.service.findViagens(motoristaID, distancia);
   }
 
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+  })
   @Get(':id')
+  @ApiOperation({
+    summary: 'Busca uma viagem por id',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Busca uma viagem por id',
+  })
   public async getViagemById(@Param('id') id: string): Promise<NestResponse> {
     const viagem = await this.service.searchById(id);
     if (viagem) {
@@ -44,6 +81,13 @@ export class ViagemController {
   }
 
   @Post('passageiroID')
+  @ApiOperation({
+    summary: 'Cria uma viagem usando id do passageiro',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Cria uma viagem usando id do passageiro',
+  })
   public async createViagem(@Body() viagem: Viagem): Promise<NestResponse> {
     const ViagemCriado = await this.service.createViagem(viagem);
     if (ViagemCriado) {
@@ -59,7 +103,29 @@ export class ViagemController {
     });
   }
 
+  @ApiQuery({
+    name: 'motoristaID',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'viagemID',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'changeStatus',
+    required: false,
+    type: Number,
+  })
   @Patch('adicionar/')
+  @ApiOperation({
+    summary: 'Adiciona ao passageiro e ao motorista uma viagem',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Adiciona ao passageiro e ao motorista uma viagem',
+  })
   public async updateViagemStatus(
     @Query('motoristaID') motoristaID,
     @Query('viagemID') viagemID,
@@ -79,7 +145,7 @@ export class ViagemController {
     }
     throw new NotFoundException({
       statusCode: HttpStatus.NOT_FOUND,
-      message: 'Parece que ocorreu um erro',
+      message: 'Status já foi alterado e não pode ser mais alterado',
     });
   }
 }

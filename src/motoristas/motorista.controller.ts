@@ -16,12 +16,41 @@ import {
 import { NestResponseBuilder } from 'src/core/http/nest-response-builder';
 import { Motorista } from './motorista.entity';
 import { MotoristaService } from './motorista.service';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger/dist';
 
 @Controller('motoristas')
+@ApiTags('motoristas')
 export class MotoristaController {
   constructor(private service: MotoristaService) {} // criar MotoristaService
-
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'size',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'name',
+    required: false,
+    type: String,
+  })
   @Get()
+  @ApiOperation({
+    summary: 'Retorna uma lista de motorista',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Retorna uma lista de motorista',
+  })
   public async findMotoristas(
     @Query('page') page = 1,
     @Query('size') size = 20,
@@ -31,6 +60,17 @@ export class MotoristaController {
   }
 
   @Post()
+  @ApiOperation({
+    summary: 'Cria um novo motorista',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Cria um novo motorista',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Já existe este CPF cadastrado',
+  })
   public async createMotorista(
     @Body() motorista: Motorista,
   ): Promise<NestResponse> {
@@ -50,7 +90,23 @@ export class MotoristaController {
     });
   }
 
+  @ApiParam({
+    name: 'cpf',
+    required: true,
+    type: String,
+  })
   @Get(':cpf')
+  @ApiOperation({
+    summary: 'Busca um motorista pelo cpf',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Busca um motorista pelo cpf',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Motorista não encontrado',
+  })
   public async getMotoristaPorCpf(
     @Param('cpf') cpf: string,
   ): Promise<NestResponse> {
@@ -68,7 +124,20 @@ export class MotoristaController {
       });
     }
   }
+
+  @ApiParam({
+    name: 'cpf',
+    required: true,
+    type: String,
+  })
   @Put(':cpf')
+  @ApiOperation({
+    summary: 'Atualiza um motorista pelo cpf',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Atualiza um motorista pelo cpf',
+  })
   public async updateMotorista(
     @Param('cpf') cpf: string,
     @Body() motorista: Motorista,
@@ -92,7 +161,25 @@ export class MotoristaController {
     });
   }
 
+  @ApiParam({
+    name: 'cpf',
+    required: true,
+    type: String,
+  })
   @Patch('bloquear/:cpf')
+  @ApiOperation({
+    summary:
+      'Através do cpf altera o status do motorista para bloqueado/desbloqueado',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Através do cpf altera o status do motorista para bloqueado/desbloqueado',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Motorista não encontrado',
+  })
   public async bloquearMotorista(
     @Param('cpf') cpf: string,
   ): Promise<NestResponse> {
@@ -110,7 +197,25 @@ export class MotoristaController {
       });
     }
   }
+
+  @ApiParam({
+    name: 'cpf',
+    required: true,
+    type: String,
+  })
   @Delete(':cpf')
+  @ApiOperation({
+    summary: 'Busca pelo cpf um motorista e o deleta',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Busca pelo cpf um motorista e o deleta',
+  })
+  @ApiResponse({
+    status: 409,
+    description:
+      'Operação não permitida pois o motorista possui viagens ou motorista não encontrado',
+  })
   public async deleteMotorista(
     @Param('cpf') cpf: string,
   ): Promise<NestResponse> {
@@ -126,7 +231,8 @@ export class MotoristaController {
     } else {
       throw new ConflictException({
         statusCode: 409,
-        message: 'Operação não permitida ou motorista não encontrado',
+        message:
+          'Operação não permitida pois o motorista possui viagens ou motorista não encontrado',
       });
     }
   }

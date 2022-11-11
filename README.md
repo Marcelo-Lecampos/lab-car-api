@@ -1,30 +1,13 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# 🚘 LAB-CAR-API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Esté projeto foi desenvolvido no curso DevinHouse como primeiro projeto avaliativo backend.
+Foram utilizados conhecimentos básicos de Rest Api typescript e nest. 
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Referência
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+ - [DevinHouse](https://devinhouse.tech/)
+    
+- [Swagger](http://127.0.0.1:3000/swagger#)
 
 ## Installation
 
@@ -45,29 +28,490 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## ✔ Endpoint Motorista 
 
-```bash
-# unit tests
-$ npm run test
+### Post Cadastrar Motorista
 
-# e2e tests
-$ npm run test:e2e
+```
+POST http://localhost:3000/motoristas/
 
-# test coverage
-$ npm run test:cov
+{
+	"nome": "Motorista Tester",
+	"dataNascimento": "2004/11/07",
+	"cpf": "05031229621",
+	"placa": "MNW-2234",
+	"modelo": "Ford-T"
+}
+```
+**Resultado:**
+```
+{
+  "message": "Motorista Criado",
+  "statusCode": 200,
+  "motorista": {
+    "nome": "Motorista Tester",
+    "dataNascimento": "2004/11/07",
+    "cpf": "05031229621",
+    "placa": "MNW-2234",
+    "modelo": "Ford-T",
+    "bloqueado": false,
+    "id": "55dfbf4a-3fbe-47d5-a997-261254dcfe00",
+    "viagens": []
+  }
+}
+```
+### Buscar Motoristas:
+
+```
+GET: http://localhost:3000/motoristas/
+
+```
+**Resultado:**
+```
+[
+  {
+    "nome": "Motorista Tester",
+    "dataNascimento": "2004/11/07",
+    "cpf": "05031229621",
+    "placa": "MNW-2234",
+    "modelo": "Ford-T",
+    "bloqueado": false,
+    "id": "55dfbf4a-3fbe-47d5-a997-261254dcfe00",
+    "viagens": []
+  }
+]
+```
+### Buscar Motoristas com Query:
+
+```
+GET: http://localhost:3000/motoristas/?page=1&size=5&name=Tester
+
+```
+**Resultado:**
+```
+[
+  {
+    "nome": "Motorista Tester",
+    "dataNascimento": "2004/11/07",
+    "cpf": "05031229621",
+    "placa": "MNW-2234",
+    "modelo": "Ford-T",
+    "bloqueado": false,
+    "id": "55dfbf4a-3fbe-47d5-a997-261254dcfe00",
+    "viagens": []
+  }
+]
+```
+### Buscar motorista pelo CPF:
+
+```
+GET: http://localhost:3000/motoristas/05031229621
 ```
 
-## Support
+**Resultado:**
+```
+{
+  "message": "Motorista Encontrado",
+  "statusCode": 200,
+  "motorista": {
+    "nome": "Motorista Tester",
+    "dataNascimento": "2004/11/07",
+    "cpf": "05031229621",
+    "placa": "MNW-2234",
+    "modelo": "Ford-T",
+    "bloqueado": false,
+    "id": "55dfbf4a-3fbe-47d5-a997-261254dcfe00",
+    "viagens": []
+  }
+}
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
 
-## Stay in touch
+### Atualizar Motorista Pelo CPF:
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```
+PUT: http://localhost:3000/motoristas/05031229621
 
-## License
+Body: 
+{
+    "nome": "Motorista Tester 2",
+    "dataNascimento": "2004/11/07",
+    "cpf": "05031229621",
+    "placa": "MNW-2234",
+    "modelo": "Ford-T"
+}
+```
 
-Nest is [MIT licensed](LICENSE).
+**Resultado:**
+```
+{
+  "message": "Motorista Atualizado",
+  "statusCode": 200,
+  "motorista": {
+    "nome": "Motorista Tester 2",
+    "dataNascimento": "2004/11/07",
+    "cpf": "05031229621",
+    "placa": "MNW-2234",
+    "modelo": "Ford-T",
+    "bloqueado": false,
+    "viagens": [],
+    "id": "55dfbf4a-3fbe-47d5-a997-261254dcfe00"
+  }
+}
+
+```
+
+### Bloquear motoristas pelo CPF:
+
+```
+PATCH: http://localhost:3000/motoristas/bloquear/05031229621
+
+```
+
+**Resultado:**
+```
+{
+  "message": "Motorista Status alterado com sucesso",
+  "statusCode": 200,
+  "motorista": {
+    "nome": "Motorista Tester 2",
+    "dataNascimento": "2004/11/07",
+    "cpf": "05031229621",
+    "placa": "MNW-2234",
+    "modelo": "Ford-T",
+    "bloqueado": true,
+    "viagens": [],
+    "id": "55dfbf4a-3fbe-47d5-a997-261254dcfe00"
+  }
+}
+```
+### Delete motorista pelo CPF:
+```
+Obs: Só pode ser deletado usuários que não possuem registros de viagens.
+```
+
+```
+DELETE: http://localhost:3000/motoristas/05031229621
+
+```
+
+**Resultado:**
+```
+{
+  "message": "Motorista Deletado",
+  "statusCode": 200,
+  "motoristaDeletado": {
+    "nome": "Motorista Tester 2",
+    "dataNascimento": "2004/11/07",
+    "cpf": "05031229621",
+    "placa": "MNW-2234",
+    "modelo": "Ford-T",
+    "bloqueado": true,
+    "viagens": [],
+    "id": "55dfbf4a-3fbe-47d5-a997-261254dcfe00"
+  }
+}
+```
+
+## ✔ Endpoint Passageiro 
+
+### Post Cadastrar Passageiro
+
+```
+POST http://localhost:3000/passageiros/
+
+Body:
+{
+	"nome": "Passageiro Tester",
+	"dataNascimento": "2004/11/04",
+	"cpf": "05031229621",
+	"endereço":{
+	  "rua": "Laranjas",
+    "numero": 44,
+    "bairro": "centro",
+    "cidade": "fundo do mar",
+    "estado": "oceano do meio",
+    "cep": "389954"
+	}
+}
+```
+**Resultado:**
+```
+{
+  "message": "Passageiro Criado",
+  "statusCode": 201,
+  "passageiro": {
+    "nome": "Passageiro Tester",
+    "dataNascimento": "2004/11/04",
+    "cpf": "05031229621",
+    "endereço": {
+      "rua": "Laranjas",
+      "numero": 44,
+      "bairro": "centro",
+      "cidade": "fundo do mar",
+      "estado": "oceano do meio",
+      "cep": "389954"
+    },
+    "id": "77ef4841-c8dd-48dc-81e9-872849b5fc4a",
+    "viagens": []
+  }
+}
+
+```
+### Buscar Passageiros:
+
+```
+GET: http://localhost:3000/passageiros/
+
+```
+**Resultado:**
+```
+[
+  {
+    "nome": "Passageiro Tester",
+    "dataNascimento": "2004/11/04",
+    "cpf": "05031229621",
+    "endereço": {
+      "rua": "Laranjas",
+      "numero": 44,
+      "bairro": "centro",
+      "cidade": "fundo do mar",
+      "estado": "oceano do meio",
+      "cep": "389954"
+    },
+    "id": "77ef4841-c8dd-48dc-81e9-872849b5fc4a",
+    "viagens": []
+  }
+]
+```
+### Buscar Passageiros com Query:
+
+```
+GET: http://localhost:3000/passageiros/?page=1&size=5&name=Tester
+
+```
+**Resultado:**
+```
+[
+  {
+    "nome": "Passageiro Tester",
+    "dataNascimento": "2004/11/04",
+    "cpf": "05031229621",
+      "rua": "Laranjas",
+      "numero": 44,
+      "bairro": "centro",
+      "cidade": "fundo do mar",
+      "estado": "oceano do meio",
+      "cep": "389954"
+    },
+    "id": "77ef4841-c8dd-48dc-81e9-872849b5fc4a",
+    "viagens": []
+  }
+]
+
+```
+### Buscar passageiros pelo CPF:
+
+```
+GET: http://localhost:3000/passageiros/05031229621
+```
+
+**Resultado:**
+```
+{
+  "message": "Passageiro Encontrado",
+  "statusCode": 200,
+  "passageiro": {
+    "nome": "Passageiro Tester",
+    "dataNascimento": "2004/11/04",
+    "cpf": "05031229621",
+    "endereço": {
+      "rua": "Laranjas",
+      "numero": 44,
+      "bairro": "centro",
+      "cidade": "fundo do mar",
+      "estado": "oceano do meio",
+      "cep": "389954"
+    },
+    "id": "77ef4841-c8dd-48dc-81e9-872849b5fc4a",
+    "viagens": []
+  }
+}
+
+```
+
+### Atualizar Passageiro Pelo CPF:
+
+```
+PUT: http://localhost:3000/passageiros/05031229621
+
+Body: 
+{
+	"nome": "Passageiro Tester modificado",
+	"dataNascimento": "2004/11/04",
+	"cpf": "05031229621",
+	"endereço":{
+	  "rua": "Laranjas",
+    "numero": 44,
+    "bairro": "centro",
+    "cidade": "fundo do mar",
+    "estado": "oceano do meio",
+    "cep": "389954"
+	}
+}
+
+```
+
+**Resultado:**
+```
+{
+  "nome": "Passageiro Tester modificado",
+  "dataNascimento": "2004/11/04",
+  "cpf": "05031229621",
+  "endereço": {
+    "rua": "Laranjas",
+    "numero": 44,
+    "bairro": "centro",
+    "cidade": "fundo do mar",
+    "estado": "oceano do meio",
+    "cep": "389954"
+  },
+  "id": "77ef4841-c8dd-48dc-81e9-872849b5fc4a",
+  "viagens": []
+}
+```
+
+### Delete passageiros pelo CPF:
+```
+Obs: Só pode ser deletado usuários que não possuem registros de viagens.
+```
+
+```
+DELETE: http://localhost:3000/passageiros/05031229621
+
+```
+
+**Resultado:**
+```
+{
+  "message": "Passageiro Deletado",
+  "statusCode": 200,
+  "passageiroDeletado": {
+    "nome": "Passageiro Tester modificado",
+    "dataNascimento": "2004/11/04",
+    "cpf": "05031229621",
+    "endereço": {
+      "rua": "Laranjas",
+      "numero": 44,
+      "bairro": "centro",
+      "cidade": "fundo do mar",
+      "estado": "oceano do meio",
+      "cep": "389954"
+    },
+    "id": "77ef4841-c8dd-48dc-81e9-872849b5fc4a",
+    "viagens": []
+  }
+}
+```
+
+## ✔ Endpoint Viagens 
+
+### Post Cadastrar Viagem
+
+```
+Deve ser passado o "id do passageiro" dentro do Body no campo id
+```
+
+```
+POST http://localhost:3000/viagens/passageiroID
+
+Body:
+{
+"id": "bde61fdf-b73d-48c9-87a7-712218d1886a",
+"origem":"tester",
+"destino": "narnia"
+}
+```
+**Resultado:**
+```
+{
+  "status": 201,
+  "message": "Viagem criada com sucesso",
+  "viagemBody": {
+    "id": "bde61fdf-b73d-48c9-87a7-712218d1886a",
+    "origem": "tester",
+    "destino": "narnia",
+    "ViagemStatus": 0
+  }
+}
+
+```
+
+### Buscar Viagens:
+
+```
+GET: http://localhost:3000/viagens/
+
+
+```
+
+**Resultado:**
+```
+[
+  {
+    "id": "bde61fdf-b73d-48c9-87a7-712218d1886a",
+    "origem": "tester",
+    "destino": "narnia",
+    "ViagemStatus": 0,
+    "distancia": 7
+  }
+]
+```
+### Buscar Viagens dentro de um raio utilizando Query :
+
+```
+Obs: O valor do raio deve ser passado como Query na URL juntamento com o id do motorista.
+```
+
+```
+POST: http://localhost:3000/viagens/?distancia=9&motoristaID=f71a2053-c037-4ae9-b0e7-87fc5fc258fb
+
+```
+
+**Resultado:**
+```
+[
+  {
+    "id": "bde61fdf-b73d-48c9-87a7-712218d1886a",
+    "origem": "tester",
+    "destino": "narnia",
+    "ViagemStatus": 0,
+    "distancia": 7
+  }
+]
+```
+### Alterar o status da viagem e adicionar a viagem ao motorista e passageiro com Query:
+
+```
+Deve ser passado no query o id do motorista, id da viagem e o status da viagem (0-2).
+```
+
+```
+http://localhost:3000/viagens/adicionar/?motoristaID=5756bd47-fade-4fb4-8588-ce18bc08d7b7&viagemID=bde61fdf-b73d-48c9-87a7-712218d1886a&changeStatus=1
+
+```
+
+**Resultado:**
+```
+{
+  "message": "Status da Viagem atualizado com sucesso",
+  "statusCode": 200,
+  "ViagemAtualizado": {
+    "id": "bde61fdf-b73d-48c9-87a7-712218d1886a",
+    "origem": "tester",
+    "destino": "narnia",
+    "ViagemStatus": 1,
+    "distancia": 7
+  }
+}
+```

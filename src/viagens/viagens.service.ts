@@ -84,7 +84,6 @@ export class ViagemService {
         (viagem) =>
           Math.round(Math.abs(viagem.distancia)) <= Number(distanciaQuery),
       );
-      console.log('distanciaFiltro', distanciaFiltro);
       return distanciaFiltro;
     }
 
@@ -92,7 +91,6 @@ export class ViagemService {
   }
 
   public async updateViagemStatus(
-    // toDO: testar
     motoristaID: string,
     viagemID: string,
     changeStatus: number,
